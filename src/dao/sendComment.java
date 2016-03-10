@@ -15,7 +15,10 @@ import db.DBHelper;
 import db.Tools;
 import net.sf.json.JSONObject;
 
-
+/*
+ * 测试用参数
+ * ?uid=10016&password=passwordtest&mid=1&content=这是评论
+ */
 @WebServlet("/sendComment")
 public class sendComment extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -49,7 +52,10 @@ public class sendComment extends HttpServlet {
 		}
 		
 		try{
+			//获取数据库连接
 			conn_user = DBHelper.getConnection_user();
+			conn_message = DBHelper.getConnection_message();
+			
 			stmt = conn_user.createStatement();
 			//判断用户名密码是否匹配
 			if(!DBHelper.isUidPwCorrect(uid, password)){
@@ -59,11 +65,10 @@ public class sendComment extends HttpServlet {
 				response.getWriter().append(json.toString());
 				return;
 			}
-			//身份确认成功,可以进行将数据插入到数据库中
-			conn_message = DBHelper.getConnection_message();
+			//身份确认成功,可以进行将数据插入到评论表中
 			stmt = conn_message.createStatement();
 			sql = "insert into comment (uid,content,comment_time)values(" + uid + ",'" + content + "','" + comment_time +"')";
-			int count = stmt.executeUpdate(sql);
+			int count = stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
 			if(count==0){
 				//受影响的行数为0,插入失败
 				json.put("status", "fail");
@@ -71,22 +76,27 @@ public class sendComment extends HttpServlet {
 				response.getWriter().append(json.toString());
 				return;
 			}
-			//插入数据到消息表中
-			
-			
+			//没发生异常,则成功插入数据到评论表
+			rs = stmt.getGeneratedKeys();
+			rs.next();
+			String cid = rs.getString("GENERATED_KEY");	//获取刚才插入消息的cid(自增插入)
 			
 			//插入数据到消息评论表
-			
-			
-			//插入消息到用户评论表
-			
+			sql="insert into msg_comment(mid,cid)values(" + mid + "," + cid + ")";
+			stmt.executeUpdate(sql);
 			
 			//消息计数表计数器自增
+			sql = "update msg_count set count_comment=(count_comment+1) where mid=" + mid;
+			stmt.executeUpdate(sql);
 			
+			//插入消息到用户评论表
+			stmt = conn_user.createStatement();
+			sql="insert into user_comment(uid,cid)values(" + uid + "," + cid + ")";
+			stmt.executeUpdate(sql);
 			
-			
-			
-			
+			json.put("status", "success");
+			json.put("cid", cid);
+			response.getWriter().append(json.toString());
 			
 		}catch(Exception e){
 			e.printStackTrace();
