@@ -2,7 +2,6 @@ package dao;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.ServletException;
@@ -25,7 +24,7 @@ public class updateUserInfo extends HttpServlet {
 
 	private static Connection conn_user = null;
 	private static Statement stmt = null;
-	private ResultSet rs = null;
+	//private ResultSet rs = null;
 	private String sql = null;
 	
 	
