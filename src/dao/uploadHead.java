@@ -40,18 +40,16 @@ public class uploadHead extends HttpServlet {
                     // 是文件
                     String fn=fi.getName();
                     System.out.println("文件名是："+fn);  //文件名 
-                    // fn 是可能是这样的 c:\abc\de\tt\fish.jpg
-                    //path为目录,fn为文件名
-                    //TODO:修改fn为当前时间戳+jpg
-                    fi.write(new File(path,fn));
+                    //path="D:\\";
+                    //图片以时间戳来命名,后缀自动识别添加上
+                    String headName = "" + System.currentTimeMillis() + fn.substring(fn.lastIndexOf("."));
+                    fi.write(new File(path,headName));
                     
-                    if (fn.endsWith(".jpg")||true/*只要是文件就先保存*/) {
+                    /*if (fn.endsWith(".jpg")||true只要是文件就先保存) {
                         piclist.add(fn);  //把图片放入集合
-                    }
-                    
-                    
+                    }*/
                     json.put("status", "success");
-                    json.put("head", "heads/" + fn);
+                    json.put("head", "/heads/" + headName);
                     response.getWriter().append(json.toString());
                     
                 }                
@@ -60,7 +58,8 @@ public class uploadHead extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             json.put("status", "fail");
-            json.put("describe", "服务器异常"+e.getMessage());
+            json.put("describe", "服务器异常");
+            json.put("errorlog", e.getMessage());
             response.getWriter().append(json.toString());
         }
         

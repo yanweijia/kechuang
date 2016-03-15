@@ -24,8 +24,6 @@ public class changeHead extends HttpServlet {
 	private String sql = null;
 	
 	
-	
-	
     public changeHead() {  super();   }
 
 
@@ -76,7 +74,7 @@ public class changeHead extends HttpServlet {
 					response.getWriter().append(json.toString());
 					return;
 				}
-			}	
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			json.put("status", "fail");
