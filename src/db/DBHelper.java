@@ -49,6 +49,13 @@ public class DBHelper {
 		}
 		return conn_message;
 	}
+	//返回一个新的链接
+	public static Connection getNewConnection_message() throws Exception{
+		return DriverManager.getConnection(url_message,username,password);
+	}
+	public static Connection getNewConnection_user() throws Exception{
+		return DriverManager.getConnection(url_user,username,password);
+	}
 	public static boolean isUidPwCorrect(String uid,String password){
 		try {
 			conn_user = DBHelper.getConnection_user();
