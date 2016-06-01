@@ -122,7 +122,6 @@ public class getHomePage extends HttpServlet {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			e.printStackTrace();
 			json.put("status", "fail");
 			json.put("describe","未知错误");
 			response.getWriter().append(json.toString());
