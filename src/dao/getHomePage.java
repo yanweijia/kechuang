@@ -54,19 +54,22 @@ public class getHomePage extends HttpServlet {
 			stmt = conn_message.createStatement();
 			Statement stmt_msgTemp =  DBHelper.getNewConnection_message().createStatement();
 			
+			
+			//TODO:如果做得完善的话,这里的应该查的是uid关注的用的的用户所post的消息,而不是大众homepage
+			
 			sql = "SELECT mid,uid,mcontent,mtype,mstate,mtime,mattach FROM msg_info ORDER BY mtime DESC LIMIT 0,50";
 			rs = stmt.executeQuery(sql);
 			JSONArray jsonArray = new JSONArray();
 			
 			while(rs.next()){	//注意:在循环中不能再用stmt来执行更新,否则之前的ResultSet会被关闭
 				JSONObject jsonTemp = new JSONObject();
-				String temp_mid = rs.getString("mid");
-				String temp_uid = rs.getString("uid");
-				String temp_mcontent = rs.getString("mcontent");
-				String temp_mtype = rs.getString("mtype");
-				String temp_mstate = rs.getString("mstate");
-				String temp_mtime = rs.getString("mtime");
-				String temp_mattach = rs.getString("mattach");
+				String temp_mid = "" + rs.getString("mid");
+				String temp_uid = "" + rs.getString("uid");
+				String temp_mcontent = "" + rs.getString("mcontent");
+				String temp_mtype = "" + rs.getString("mtype");
+				String temp_mstate = "" + rs.getString("mstate");
+				String temp_mtime = "" + rs.getString("mtime");
+				String temp_mattach = "" + rs.getString("mattach");
 				
 				//将被拉消息的被浏览数+1
 				sql = "update msg_count set count_view=(count_view+1) where mid=" + temp_mid;
@@ -76,18 +79,18 @@ public class getHomePage extends HttpServlet {
 				sql = "SELECT count_view,count_like,count_comment,count_repost FROM msg_count WHERE mid=" + temp_mid;
 				temp_rs = stmt_msgTemp.executeQuery(sql);
 				temp_rs.next();
-				String count_view = temp_rs.getString("count_view");
-				String count_like = temp_rs.getString("count_like");
-				String count_comment = temp_rs.getString("count_comment");
-				String count_repost = temp_rs.getString("count_repost");
+				String count_view = "" + temp_rs.getString("count_view");
+				String count_like = "" + temp_rs.getString("count_like");
+				String count_comment = "" + temp_rs.getString("count_comment");
+				String count_repost = "" + temp_rs.getString("count_repost");
 				
 				//获取发消息的人的head和name
 				Statement stmt_user = conn_user.createStatement();
 				sql = "SELECT name,head FROM user_info WHERE uid=" + temp_uid;
 				temp_rs = stmt_user.executeQuery(sql);
 				temp_rs.next();
-				String temp_name = temp_rs.getString("name");
-				String temp_head = temp_rs.getString("head");
+				String temp_name = "" + temp_rs.getString("name");
+				String temp_head = "" + temp_rs.getString("head");
 				
 				//获取该消息是否被favorite过
 				sql = "SELECT uid,favorite_mid FROM user_favorite WHERE uid=" + temp_uid + " AND favorite_mid=" + temp_mid;
