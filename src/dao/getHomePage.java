@@ -93,8 +93,8 @@ public class getHomePage extends HttpServlet {
 				String temp_head = "" + temp_rs.getString("head");
 				
 				//获取该消息是否被favorite过
-				sql = "SELECT uid,favorite_mid FROM user_favorite WHERE uid=" + temp_uid + " AND favorite_mid=" + temp_mid;
-				temp_rs = stmt_user.executeQuery(sql);
+				sql = "SELECT uid,mid FROM favoritelist WHERE uid=" + temp_uid + " AND mid=" + temp_mid;
+				temp_rs = stmt_msgTemp.executeQuery(sql);
 				boolean isFavorited = temp_rs.next();
 					
 				

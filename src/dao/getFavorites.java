@@ -48,10 +48,10 @@ public class getFavorites extends HttpServlet {
 		}
 		
 		try {
-			conn_user = DBHelper.getConnection_user();
-			stmt = conn_user.createStatement();
+			conn_message = DBHelper.getConnection_message();
+			stmt = conn_message.createStatement();
 			
-			sql="select uid,favorite_mid from user_favorite where uid=" + uid;
+			sql="select uid,mid from favoritelist where uid=" + uid;
 			rs = stmt.executeQuery(sql);
 			JSONArray jsonArray = new JSONArray();
 
@@ -61,7 +61,7 @@ public class getFavorites extends HttpServlet {
 			while(rs.next()){
 				JSONObject jsonTemp = new JSONObject();
 				jsonTemp.put("uid", rs.getString("uid"));
-				jsonTemp.put("favorite_mid", rs.getString("favorite_mid"));
+				jsonTemp.put("mid", rs.getString("mid"));
 				jsonArray.add(jsonTemp);
 			}
 			json.put("favorites", jsonArray);
